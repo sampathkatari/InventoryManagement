@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(schema = "inventory_management", name = "user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String firstName;
     private String lastName;
     private String userName;
@@ -15,11 +15,11 @@ public class User {
     private String dob;
     private String gender;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

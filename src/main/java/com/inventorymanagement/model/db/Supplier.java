@@ -9,18 +9,18 @@ import java.util.Set;
 @Table(schema = "inventory_management", name = "supplier")
 public class Supplier {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String name;
     private String address;
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Product> products;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -8,8 +8,8 @@ import javax.persistence.*;
 @Table(schema = "inventory_management", name = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand_id")
@@ -18,11 +18,11 @@ public class Product {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
