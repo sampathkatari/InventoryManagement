@@ -1,28 +1,26 @@
 package com.inventorymanagement.model.ui;
 
-import com.inventorymanagement.model.db.Supplier;
-
 import java.time.LocalDateTime;
 
 /**
- * Created by sampathkatari on 18/06/18.
+ * Created by sampathkatari on 26/06/18.
  */
-public class SupplierDto {
+public class ProductDto {
     private int id;
     private String name;
-    private String address;
+    private int brandId;
+    private String brandName;
     private LocalDateTime createdOn;
-    private String email;
-    public SupplierDto() {
+    public ProductDto() {
 
     }
 
-    private SupplierDto(Builder builder) {
+    private ProductDto(Builder builder) {
         setId(builder.id);
         setName(builder.name);
-        setAddress(builder.address);
+        setBrandId(builder.brandId);
+        setBrandName(builder.brandName);
         setCreatedOn(builder.createdOn);
-        setEmail(builder.email);
     }
 
     public static Builder newBuilder() {
@@ -45,12 +43,20 @@ public class SupplierDto {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public int getBrandId() {
+        return brandId;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public LocalDateTime getCreatedOn() {
@@ -61,20 +67,12 @@ public class SupplierDto {
         this.createdOn = createdOn;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public static final class Builder {
         private int id;
         private String name;
-        private String address;
+        private int brandId;
+        private String brandName;
         private LocalDateTime createdOn;
-        private String email;
 
         private Builder() {
         }
@@ -89,8 +87,13 @@ public class SupplierDto {
             return this;
         }
 
-        public Builder address(String val) {
-            address = val;
+        public Builder brandId(int val) {
+            brandId = val;
+            return this;
+        }
+
+        public Builder brandName(String val) {
+            brandName = val;
             return this;
         }
 
@@ -99,13 +102,8 @@ public class SupplierDto {
             return this;
         }
 
-        public Builder email(String val) {
-            email = val;
-            return this;
-        }
-
-        public SupplierDto build() {
-            return new SupplierDto(this);
+        public ProductDto build() {
+            return new ProductDto(this);
         }
     }
 }

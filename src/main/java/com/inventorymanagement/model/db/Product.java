@@ -3,6 +3,9 @@ package com.inventorymanagement.model.db;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(schema = "inventory_management", name = "product")
@@ -11,12 +14,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private LocalDateTime createdOn;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand_id")
     private Brand brand;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<SupplierProducts> supplierProducts;
 
     public int getId() {
         return id;
@@ -42,11 +45,11 @@ public class Product {
         this.brand = brand;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
     }
 }

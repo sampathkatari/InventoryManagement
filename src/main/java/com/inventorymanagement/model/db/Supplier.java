@@ -3,6 +3,8 @@ package com.inventorymanagement.model.db;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -13,8 +15,10 @@ public class Supplier {
     private int id;
     private String name;
     private String address;
+    private LocalDateTime createdOn;
+    private String email;
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Product> products;
+    private Set<SupplierProducts> supplierProducts;
 
     public int getId() {
         return id;
@@ -40,11 +44,27 @@ public class Supplier {
         this.address = address;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Set<SupplierProducts> getSupplierProducts() {
+        return supplierProducts;
+    }
+
+    public void setSupplierProducts(Set<SupplierProducts> supplierProducts) {
+        this.supplierProducts = supplierProducts;
     }
 }

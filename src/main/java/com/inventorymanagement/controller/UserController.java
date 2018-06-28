@@ -5,12 +5,12 @@ import com.inventorymanagement.model.db.User;
 import com.inventorymanagement.model.ui.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * Created by sampathkatari on 18/06/18.
@@ -19,6 +19,7 @@ import javax.websocket.server.PathParam;
 @RequestMapping(value = "/user")
 public class UserController {
 
+    static final Base64.Encoder ENCODER = Base64.getEncoder();
     @Autowired
     private UserDao userDao;
 
@@ -35,9 +36,25 @@ public class UserController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<?> create() {
-
+    public ResponseEntity<?> signUp(@RequestBody final UserDto userDto) throws NoSuchAlgorithmException {
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setDob(userDto.getDob());
+        user.setGender(userDto.getGender());
+        user.setPassword(hashedPassword(userDto.getPassword()));
         return ResponseEntity.ok().build();
+    }
+
+    private String hashedPassword(final String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(password.getBytes());
+        byte[] digest = md.digest();
+        return encodeByteToString(digest);
+    }
+
+    private String encodeByteToString(final byte[] input) {
+        return ENCODER.encodeToString(input);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)

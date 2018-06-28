@@ -1,10 +1,18 @@
 package com.inventorymanagement.controller;
 
+import com.inventorymanagement.dao.BrandDao;
+import com.inventorymanagement.model.db.Brand;
+import com.inventorymanagement.model.ui.BrandDto;
+import com.inventorymanagement.model.ui.ProductDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by sampathkatari on 18/06/18.
@@ -12,27 +20,49 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/brand")
 public class BrandController {
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> get() {
 
-        return ResponseEntity.ok().build();
+    @Autowired
+    private BrandDao brandDao;
+
+    @RequestMapping(value = "", method =  RequestMethod.GET)
+    public ResponseEntity<?> getAll() {
+        List<BrandDto> collect = brandDao.findAll()
+                .stream()
+                .map(brand -> BrandDto.newBuilder()
+                        .id(brand.getId())
+                        .name(brand.getName())
+                        .createdOn(brand.getCreatedOn())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(collect);
+    }
+    @RequestMapping(value = "/{brandId}", method = RequestMethod.GET)
+    public ResponseEntity<?> get(@PathVariable("brandId") final String brandId) {
+        Brand one = brandDao.findOne(Integer.parseInt(brandId));
+        BrandDto build = BrandDto.newBuilder()
+                .name(one.getName())
+                .createdOn(one.getCreatedOn())
+                .id(one.getId())
+                .build();
+        return ResponseEntity.ok().body(build);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<?> create() {
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> create(@RequestBody Brand brand) {
+        brand.setCreatedOn(LocalDateTime.now());
+        return ResponseEntity.ok(brandDao.save(brand));
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT)
-    public ResponseEntity<?> update() {
-
-        return ResponseEntity.ok().build();
+    @RequestMapping(value = "/{brandId}", method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@PathVariable("brandId") final int brandId, @RequestBody Brand brand) {
+        Brand one = brandDao.getOne(brandId);
+        one.setName(brand.getName());
+        return ResponseEntity.ok(brandDao.save(one));
     }
 
-    @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete() {
-
+    @RequestMapping(value = "/{brandId}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable("brandId") final int brandId) {
+        brandDao.delete(brandDao.getOne(brandId));
         return ResponseEntity.ok().build();
     }
 }

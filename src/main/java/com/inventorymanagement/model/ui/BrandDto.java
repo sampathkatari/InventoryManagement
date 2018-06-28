@@ -1,28 +1,23 @@
 package com.inventorymanagement.model.ui;
 
-import com.inventorymanagement.model.db.Supplier;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * Created by sampathkatari on 18/06/18.
+ * Created by sampathkatari on 26/06/18.
  */
-public class SupplierDto {
+public class BrandDto {
     private int id;
     private String name;
-    private String address;
     private LocalDateTime createdOn;
-    private String email;
-    public SupplierDto() {
+    public BrandDto(){
 
     }
 
-    private SupplierDto(Builder builder) {
+    private BrandDto(Builder builder) {
         setId(builder.id);
         setName(builder.name);
-        setAddress(builder.address);
         setCreatedOn(builder.createdOn);
-        setEmail(builder.email);
     }
 
     public static Builder newBuilder() {
@@ -45,14 +40,6 @@ public class SupplierDto {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
@@ -61,20 +48,10 @@ public class SupplierDto {
         this.createdOn = createdOn;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public static final class Builder {
         private int id;
         private String name;
-        private String address;
         private LocalDateTime createdOn;
-        private String email;
 
         private Builder() {
         }
@@ -89,23 +66,13 @@ public class SupplierDto {
             return this;
         }
 
-        public Builder address(String val) {
-            address = val;
-            return this;
-        }
-
         public Builder createdOn(LocalDateTime val) {
             createdOn = val;
             return this;
         }
 
-        public Builder email(String val) {
-            email = val;
-            return this;
-        }
-
-        public SupplierDto build() {
-            return new SupplierDto(this);
+        public BrandDto build() {
+            return new BrandDto(this);
         }
     }
 }

@@ -10,6 +10,10 @@ public class UserDto {
     private String userName;
     private String dob;
     private String gender;
+    private String password;
+    public UserDto() {
+
+    }
 
     private UserDto(Builder builder) {
         setId(builder.id);
@@ -18,6 +22,7 @@ public class UserDto {
         setUserName(builder.userName);
         setDob(builder.dob);
         setGender(builder.gender);
+        setPassword(builder.password);
     }
 
     public static Builder newBuilder() {
@@ -72,6 +77,14 @@ public class UserDto {
         this.gender = gender;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public static final class Builder {
         private int id;
         private String firstName;
@@ -79,6 +92,7 @@ public class UserDto {
         private String userName;
         private String dob;
         private String gender;
+        private String password;
 
         private Builder() {
         }
@@ -110,6 +124,11 @@ public class UserDto {
 
         public Builder gender(String val) {
             gender = val;
+            return this;
+        }
+
+        public Builder password(String val) {
+            password = val;
             return this;
         }
 
