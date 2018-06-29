@@ -13,7 +13,8 @@ import java.util.Properties;
 @Service
 public class MailService {
     public void sendEmail(String to, String productName) {
-        String from = "sampath.katari37@gmail.com";
+        String from = "";
+        String password = "";
         String host = "localhost";//or IP address
 
         //Get the session object
@@ -27,7 +28,7 @@ public class MailService {
         Session session = Session.getDefaultInstance(props,
                 new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(from, "audi00000");
+                        return new PasswordAuthentication(from, password);
                     }
                 });
 
