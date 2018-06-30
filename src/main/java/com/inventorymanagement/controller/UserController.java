@@ -4,9 +4,12 @@ import com.inventorymanagement.dao.UserDao;
 import com.inventorymanagement.model.db.User;
 import com.inventorymanagement.model.ui.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,49 +26,33 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> get(@PathVariable("id")final String id) {
-        final User user = userDao.getOne(Integer.parseInt(id));
-        return ResponseEntity.ok(UserDto.newBuilder().firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .dob(user.getDob())
-                .gender(user.getGender())
-                .id(user.getId())
-                .userName(user.getUserName())
-                .build());
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody UserDto userDto) {
+        User byUsername = userDao.findByUsername(userDto.getUsername());
+        if(byUsername == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(byUsername.getPassword().equals(userDto.getPassword())){
+            HttpSession session = request.getSession();
+            session.setAttribute("username", byUsername.getUserName());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<?> signUp(@RequestBody final UserDto userDto) throws NoSuchAlgorithmException {
-        User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setDob(userDto.getDob());
-        user.setGender(userDto.getGender());
-        user.setPassword(hashedPassword(userDto.getPassword()));
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("username", null);
         return ResponseEntity.ok().build();
     }
 
-    private String hashedPassword(final String password) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(password.getBytes());
-        byte[] digest = md.digest();
-        return encodeByteToString(digest);
-    }
-
-    private String encodeByteToString(final byte[] input) {
-        return ENCODER.encodeToString(input);
-    }
-
-    @RequestMapping(value = "", method = RequestMethod.PUT)
-    public ResponseEntity<?> update() {
-
-        return ResponseEntity.ok().build();
-    }
-
-    @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete() {
-
+    @RequestMapping(value = "/ping", method = RequestMethod.POST)
+    public ResponseEntity<?> checkSession(HttpServletRequest request) {
+        if(request.getSession().getAttribute("username") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.ok().build();
     }
 

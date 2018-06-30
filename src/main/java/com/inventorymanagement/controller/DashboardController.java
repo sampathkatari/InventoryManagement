@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Created by sampathkatari on 30/06/18.
  */
@@ -31,7 +35,7 @@ public class DashboardController {
     @Autowired
     private SupplierProductsDao supplierProductsDao;
     @RequestMapping(value = "/stats", method = RequestMethod.GET)
-    public ResponseEntity<?> overallStats() {
+    public ResponseEntity<?> overallStats(HttpServletRequest request, HttpServletResponse response) {
         long totalBrands = brandDao.findAll().stream().count();
         long totalProducts = productDao.findAll().stream().count();
         long totalSuppliers = supplierDao.findAll().stream().count();

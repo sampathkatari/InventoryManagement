@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.xml.ws.Response;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,7 +38,7 @@ public class SupplierController {
     private MailService mailService;
 
     @RequestMapping(value = "", method =  RequestMethod.GET)
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(final HttpServletRequest request) {
         List<SupplierDto> collect = supplierDao.findAll()
                 .stream()
                 .map(supplier -> SupplierDto.newBuilder()
