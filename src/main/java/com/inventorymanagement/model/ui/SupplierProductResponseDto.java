@@ -7,6 +7,7 @@ public class SupplierProductResponseDto {
     private int id;
     private ProductDto product;
     private int quantity;
+    private double price;
     public SupplierProductResponseDto()
     {
 
@@ -16,6 +17,7 @@ public class SupplierProductResponseDto {
         setId(builder.id);
         setProduct(builder.product);
         setQuantity(builder.quantity);
+        setPrice(builder.price);
     }
 
     public static Builder newBuilder() {
@@ -46,10 +48,19 @@ public class SupplierProductResponseDto {
         this.quantity = quantity;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public static final class Builder {
         private int id;
         private ProductDto product;
         private int quantity;
+        private double price;
 
         private Builder() {
         }
@@ -66,6 +77,11 @@ public class SupplierProductResponseDto {
 
         public Builder quantity(int val) {
             quantity = val;
+            return this;
+        }
+
+        public Builder price(double val) {
+            price = val;
             return this;
         }
 

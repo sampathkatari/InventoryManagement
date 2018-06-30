@@ -13,6 +13,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true)
     private String name;
     private LocalDateTime createdOn;
     @ManyToOne(fetch = FetchType.EAGER)

@@ -94,6 +94,7 @@ public class SupplierController {
         supplierProducts.setProduct(productDao.getOne(supplierProductDto.getProductId()));
         supplierProducts.setSupplier(supplierDao.getOne(supplierProductDto.getSupplierId()));
         supplierProducts.setQuantity(supplierProductDto.getQuantity());
+        supplierProducts.setPrice(supplierProductDto.getPrice());
         supplierProductsDao.save(supplierProducts);
         return ResponseEntity.ok().build();
     }
@@ -111,6 +112,7 @@ public class SupplierController {
                 .id(supplierProducts.getId())
                 .product(ProductController.productDbToDto(supplierProducts.getProduct()))
                 .quantity(supplierProducts.getQuantity())
+                .price(supplierProducts.getPrice())
                 .build();
     }
 

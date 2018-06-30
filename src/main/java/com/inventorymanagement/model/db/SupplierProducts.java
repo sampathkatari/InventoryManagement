@@ -18,6 +18,7 @@ public class SupplierProducts {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
     private int quantity;
+    private double price;
 
     public int getId() {
         return id;
@@ -49,5 +50,13 @@ public class SupplierProducts {
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
