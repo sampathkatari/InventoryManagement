@@ -8,12 +8,11 @@ import com.inventorymanagement.model.db.SupplierProducts;
 import com.inventorymanagement.model.ui.*;
 import com.inventorymanagement.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.xml.ws.Response;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,6 +68,9 @@ public class SupplierController {
     }
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody final SupplierDto supplierDto) {
+        if(supplierDao.findBySupplierName(supplierDto.getName()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         Supplier supplier = new Supplier();
         supplier.setName(supplierDto.getName());
         supplier.setCreatedOn(LocalDateTime.now());
