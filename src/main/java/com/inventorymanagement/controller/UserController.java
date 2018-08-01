@@ -53,7 +53,9 @@ public class UserController {
         if(request.getSession().getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok().build();
+        final UserDto userDto = new UserDto();
+        userDto.setUsername((String)request.getSession().getAttribute("username"));
+        return ResponseEntity.ok().body(userDto);
     }
 
 }

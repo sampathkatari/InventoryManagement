@@ -68,7 +68,7 @@ public class SupplierController {
     }
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody final SupplierDto supplierDto) {
-        if(supplierDao.findBySupplierName(supplierDto.getName()) != null) {
+        if(supplierDao.findBySupplierName(supplierDto.getName().toLowerCase()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Supplier supplier = new Supplier();

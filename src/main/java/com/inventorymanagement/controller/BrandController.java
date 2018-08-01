@@ -5,6 +5,7 @@ import com.inventorymanagement.model.db.Brand;
 import com.inventorymanagement.model.ui.BrandDto;
 import com.inventorymanagement.model.ui.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,9 @@ public class BrandController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody Brand brand) {
+        if(brandDao.findByName(brand.getName().toLowerCase()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         brand.setCreatedOn(LocalDateTime.now());
         return ResponseEntity.ok(brandDao.save(brand));
     }
