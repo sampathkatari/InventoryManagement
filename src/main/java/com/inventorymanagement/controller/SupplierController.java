@@ -9,13 +9,17 @@ import com.inventorymanagement.model.db.Supplier;
 import com.inventorymanagement.model.db.SupplierProducts;
 import com.inventorymanagement.model.ui.*;
 import com.inventorymanagement.services.MailService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +44,8 @@ public class SupplierController {
 
     @Autowired
     private ReportDao reportDao;
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
     @RequestMapping(value = "", method =  RequestMethod.GET)
     public ResponseEntity<?> getAll(final HttpServletRequest request) {
@@ -162,5 +168,18 @@ public class SupplierController {
         one.setQuantity(updatedQuantity);
         supplierProductsDao.save(one);
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/report", method = RequestMethod.GET)
+    public ResponseEntity<?> report(@RequestParam("startDate") final String startDate,
+                                    @RequestParam("endDate") final String endDate) {
+
+
+        LocalDateTime start = LocalDateTime.of(LocalDate.parse(startDate, formatter), LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.parse(endDate, formatter), LocalTime.of(23, 59));
+        final List<Report> reportList = reportDao.findAll().stream().filter(report -> {
+            return (report.getLocalDateTime().compareTo(start) > 0 && report.getLocalDateTime().compareTo(end) < 0);
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok().body(reportList);
     }
 }
