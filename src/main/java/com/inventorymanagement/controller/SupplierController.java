@@ -1,8 +1,10 @@
 package com.inventorymanagement.controller;
 
 import com.inventorymanagement.dao.ProductDao;
+import com.inventorymanagement.dao.ReportDao;
 import com.inventorymanagement.dao.SupplierDao;
 import com.inventorymanagement.dao.SupplierProductsDao;
+import com.inventorymanagement.model.db.Report;
 import com.inventorymanagement.model.db.Supplier;
 import com.inventorymanagement.model.db.SupplierProducts;
 import com.inventorymanagement.model.ui.*;
@@ -35,6 +37,9 @@ public class SupplierController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private ReportDao reportDao;
 
     @RequestMapping(value = "", method =  RequestMethod.GET)
     public ResponseEntity<?> getAll(final HttpServletRequest request) {
@@ -147,6 +152,12 @@ public class SupplierController {
         if(updatedQuantity < 25) {
             Supplier supplier = supplierDao.findOne(Integer.parseInt(supplierId));
             mailService.sendEmail(supplier.getEmail(), one.getProduct().getName());
+            Report report = new Report();
+            report.setProductName(one.getProduct().getName());
+            report.setSupplierEmail(supplier.getEmail());
+            report.setQuantity(updatedQuantity);
+            report.setLocalDateTime(LocalDateTime.now());
+            reportDao.save(report);
         }
         one.setQuantity(updatedQuantity);
         supplierProductsDao.save(one);
