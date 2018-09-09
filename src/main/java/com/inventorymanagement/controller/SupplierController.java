@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.Response;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -51,6 +52,7 @@ public class SupplierController {
     public ResponseEntity<?> getAll(final HttpServletRequest request) {
         List<SupplierDto> collect = supplierDao.findAll()
                 .stream()
+                .filter(supplier -> supplier.isActive())
                 .map(supplier -> SupplierDto.newBuilder()
                         .id(supplier.getId())
                         .name(supplier.getName())
@@ -66,6 +68,17 @@ public class SupplierController {
     public ResponseEntity<?> get(@PathVariable("supplierId") final String supplierId) {
         Supplier one = supplierDao.findOne(Integer.parseInt(supplierId));
         return ResponseEntity.ok(supplierDbToDto(one));
+    }
+
+    @RequestMapping(value = "/verify", method = RequestMethod.GET)
+    public ResponseEntity<?> verifyEmail(@RequestParam("id") final String id){
+        Supplier one = supplierDao.findOne(Integer.parseInt(id));
+        if(one == null) {
+            return ResponseEntity.ok().body("Unable to verify you email.");
+        }
+        one.setActive(true);
+        supplierDao.save(one);
+        return ResponseEntity.ok("Your account has been verify. Your products will be listed from now.");
     }
 
     public static SupplierDto supplierDbToDto(final Supplier supplier) {
@@ -87,7 +100,8 @@ public class SupplierController {
         supplier.setCreatedOn(LocalDateTime.now());
         supplier.setAddress(supplierDto.getAddress());
         supplier.setEmail(supplierDto.getEmail());
-        supplierDao.save(supplier);
+        Supplier save = supplierDao.save(supplier);
+        mailService.sendVerificationEmail(supplierDto.getEmail(), save.getId());
         return ResponseEntity.ok().build();
     }
 

@@ -38,7 +38,7 @@ public class DashboardController {
     public ResponseEntity<?> overallStats(HttpServletRequest request, HttpServletResponse response) {
         long totalBrands = brandDao.findAll().stream().count();
         long totalProducts = productDao.findAll().stream().count();
-        long totalSuppliers = supplierDao.findAll().stream().count();
+        long totalSuppliers = supplierDao.findAll().stream().filter(supplier -> supplier.isActive()).count();
         long totalStockQuantity = supplierProductsDao.findAll().stream().map(supplierProducts -> supplierProducts.getQuantity())
                 .mapToLong(quantity -> quantity).sum();
         double totalStockPrice = supplierProductsDao.findAll().stream().map(supplierProducts -> supplierProducts.getPrice()*supplierProducts.getQuantity())
